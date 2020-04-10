@@ -1,0 +1,16 @@
+{
+    "name": "alejandro/refactorizacion",
+    "description": "Curso de refactorización^",
+    "authors": [
+        {
+            "name": "Alejandro Zorita",
+            "email": "alejandro.zorita@medssocial.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
