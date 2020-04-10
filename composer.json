@@ -7,7 +7,6 @@
             "email": "alejandro.zorita@medssocial.com"
         }
     ],
-    "require": {},
     "autoload": {
         "psr-4": {
             "App\\": "app/"
