@@ -38,13 +38,13 @@ class HtmlElement
      */
     public function render()
     {
-        $result = $this->openTag();
+        $result = $this->open();
 
-        if ( $this->isVoidElement() ) {
+        if ( $this->isVoid() ) {
             return $result;
         }
-        $result .= $this->renderContent();
-        $result .= $this->closeTag();
+        $result .= $this->content();
+        $result .= $this->close();
         return $result;
     }
 
@@ -52,7 +52,7 @@ class HtmlElement
     /**
      * @return bool
      */
-    public function isVoidElement(): bool
+    public function isVoid(): bool
     {
         return in_array($this->name, [ 'br', 'hr', 'img', 'input', 'meta' ]);
     }
@@ -61,21 +61,12 @@ class HtmlElement
     /**
      * @return string
      */
-    protected function openTag()
+    public function open(): string
     {
         if ( ! empty($this->attributes) ) {
 
-            $htmlAttributes = '';
-
-            foreach ( $this->attributes as $attribute => $value ) {
-                if ( is_numeric($attribute) ) {
-                    $htmlAttributes .= " $value";
-                } else {
-                    $htmlAttributes .= ' ' . $attribute . '="' . htmlentities($value, ENT_QUOTES, 'UTF-8') . '"';
-                }
-            }
-
-            // Abrir la etiqueta con atributos
+            $htmlAttributes = $this->attributes();
+            
             $result = "<$this->name$htmlAttributes>";
         } else {
 
@@ -89,7 +80,7 @@ class HtmlElement
     /**
      * @return string
      */
-    protected function renderContent(): string
+    public function content(): string
     {
         return htmlentities($this->content, ENT_QUOTES, 'UTF-8');
     }
@@ -98,9 +89,41 @@ class HtmlElement
     /**
      * @return string
      */
-    protected function closeTag(): string
+    public function close(): string
     {
         return "</$this->name>";
+    }
+
+
+    /**
+     * @return string
+     */
+    public function attributes(): string
+    {
+        $htmlAttributes = '';
+
+        foreach ( $this->attributes as $attribute => $value ) {
+            $htmlAttributes .= $this->renderAttribute($attribute, $value);
+        }
+
+        return $htmlAttributes;
+    }
+
+
+    /**
+     * @param $attribute
+     * @param $value
+     *
+     * @return string
+     */
+    protected function renderAttribute($attribute, $value): string
+    {
+        if ( is_numeric($attribute) ) {
+            $htmlAttribute = " $value";
+        } else {
+            $htmlAttribute = ' ' . $attribute . '="' . htmlentities($value, ENT_QUOTES, 'UTF-8') . '"';
+        }
+        return $htmlAttribute;
     }
 
 }
