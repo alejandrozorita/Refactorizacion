@@ -2,28 +2,28 @@
 
 namespace App;
 
-/**
- * Class HtmlElement
- *
- * @package App
- */
 class HtmlElement
 {
     /**
-     * @var \App\string
+     * @var string
      */
     private $name;
+    /**
+     * @var null
+     */
+    private $content;
 
 
     /**
      * HtmlElement constructor.
      *
      * @param  \App\string  $name
+     * @param $content
      */
-    private function __construct(string $name)
+    public function __construct(string $name, $content = null)
     {
-
         $this->name = $name;
+        $this->content = $content;
     }
 
 
@@ -32,7 +32,12 @@ class HtmlElement
      */
     public function render()
     {
-        return "HTML RENDER";
+        $result = "<$this->name>";
+
+        $result .= $this->content;
+
+        $result .= "</$this->name>";
+        return $result;
     }
 
 }
