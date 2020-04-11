@@ -38,7 +38,31 @@ class HtmlElement
      */
     public function render()
     {
-        // Si el elemento trie atributos
+        $result = $this->openTag();
+
+        if ( $this->isVoidElement() ) {
+            return $result;
+        }
+        $result .= $this->renderContent();
+        $result .= $this->closeTag();
+        return $result;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isVoidElement(): bool
+    {
+        return in_array($this->name, [ 'br', 'hr', 'img', 'input', 'meta' ]);
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function openTag()
+    {
         if ( ! empty($this->attributes) ) {
 
             $htmlAttributes = '';
@@ -58,18 +82,25 @@ class HtmlElement
             // Abrir la etiqeuta sin atributos
             $result = "<$this->name>";
         }
-
-        // Si es void
-        if ( in_array($this->name, [ 'br', 'hr', 'img', 'input', 'meta' ]) ) {
-            return $result;
-        }
-
-        // Retornar el resultado de una  vez
-
-        $result .= htmlentities($this->content, ENT_QUOTES, 'UTF-8');
-
-        $result .= "</$this->name>";
         return $result;
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function renderContent(): string
+    {
+        return htmlentities($this->content, ENT_QUOTES, 'UTF-8');
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function closeTag(): string
+    {
+        return "</$this->name>";
     }
 
 }

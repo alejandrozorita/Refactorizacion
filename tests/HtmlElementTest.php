@@ -6,6 +6,15 @@ use App\HtmlElement;
 
 class HtmlElementTest extends TestCase
 {
+    /**
+     * @test
+     */
+    function it_checks_if_a_element_is_void_or_not()
+    {
+        $this->assertFalse(( new HtmlElement('p') )->isVoidElement());
+        $this->assertTrue(( new HtmlElement('img') )->isVoidElement());
+    }
+
 
     /**
      * @test
@@ -66,13 +75,14 @@ class HtmlElementTest extends TestCase
         );
     }
 
+
     /**
      * @test
      */
     function it_escpoes_the_html_attributes()
     {
         $elements = new HtmlElement(
-          'img', [ 'src' => 'img.jpg', 'title' => 'Curso de "Refactorización" de alejandro']
+          'img', [ 'src' => 'img.jpg', 'title' => 'Curso de "Refactorización" de alejandro' ]
         );
 
         $this->assertSame(
@@ -80,6 +90,7 @@ class HtmlElementTest extends TestCase
           $elements->render()
         );
     }
+
 
     /**
      * @test
