@@ -8,10 +8,12 @@ class HtmlElement
      * @var string
      */
     private $name;
+
     /**
      * @var null
      */
     private $content;
+
     /**
      * @var array
      */
@@ -63,17 +65,7 @@ class HtmlElement
      */
     public function open(): string
     {
-        if ( ! empty($this->attributes) ) {
-
-            $htmlAttributes = $this->attributes();
-            
-            $result = "<$this->name$htmlAttributes>";
-        } else {
-
-            // Abrir la etiqeuta sin atributos
-            $result = "<$this->name>";
-        }
-        return $result;
+        return '<' . $this->name . $this->attributes() . '>';
     }
 
 
@@ -100,6 +92,18 @@ class HtmlElement
      */
     public function attributes(): string
     {
+
+        /*
+         *
+         if ( empty($this->attributes) ) {
+            return '';
+        }
+
+         */
+        if ( ! $this->hasAttributes() ) {
+            return '';
+        }
+
         $htmlAttributes = '';
 
         foreach ( $this->attributes as $attribute => $value ) {
@@ -107,6 +111,15 @@ class HtmlElement
         }
 
         return $htmlAttributes;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function hasAttributes(): bool
+    {
+        return ! empty($this->attributes);
     }
 
 
@@ -119,11 +132,10 @@ class HtmlElement
     protected function renderAttribute($attribute, $value): string
     {
         if ( is_numeric($attribute) ) {
-            $htmlAttribute = " $value";
-        } else {
-            $htmlAttribute = ' ' . $attribute . '="' . htmlentities($value, ENT_QUOTES, 'UTF-8') . '"';
+            return " $value";
         }
-        return $htmlAttribute;
+
+        return ' ' . $attribute . '="' . htmlentities($value, ENT_QUOTES, 'UTF-8') . '"';
     }
 
 }
