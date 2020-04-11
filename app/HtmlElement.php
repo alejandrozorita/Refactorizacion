@@ -43,24 +43,30 @@ class HtmlElement
 
             $htmlAttributes = '';
 
-            foreach ( $this->attributes as $name => $attribute ) {
-                $htmlAttributes .= " $name='$attribute'";
+            foreach ( $this->attributes as $attribute => $value ) {
+                if ( is_numeric($attribute) ) {
+                    $htmlAttributes .= " $value";
+                } else {
+                    $htmlAttributes .= ' ' . $attribute . '="' . htmlentities($value, ENT_QUOTES, 'UTF-8') . '"';
+                }
             }
+
             // Abrir la etiqueta con atributos
             $result = "<$this->name$htmlAttributes>";
         } else {
+
             // Abrir la etiqeuta sin atributos
             $result = "<$this->name>";
         }
 
         // Si es void
-        if(in_array($this->name, ['br','hr','img', 'input', 'meta'])) {
+        if ( in_array($this->name, [ 'br', 'hr', 'img', 'input', 'meta' ]) ) {
             return $result;
         }
 
         // Retornar el resultado de una  vez
 
-        $result .= $this->content;
+        $result .= htmlentities($this->content, ENT_QUOTES, 'UTF-8');
 
         $result .= "</$this->name>";
         return $result;
