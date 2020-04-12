@@ -40,14 +40,11 @@ class HtmlElement
      */
     public function render()
     {
-        $result = $this->open();
-
         if ( $this->isVoid() ) {
-            return $result;
+            return $this->open();
         }
-        $result .= $this->content();
-        $result .= $this->close();
-        return $result;
+
+        return $this->open() . $this->content() . $this->close();
     }
 
 
@@ -104,13 +101,9 @@ class HtmlElement
             return '';
         }
 
-        $htmlAttributes = '';
-
-        foreach ( $this->attributes as $attribute => $value ) {
-            $htmlAttributes .= $this->renderAttribute($attribute, $value);
-        }
-
-        return $htmlAttributes;
+        return array_reduce(array_keys($this->attributes), function ($result, $item) {
+            return $result . $this->renderAttribute($item);
+        }, '');
     }
 
 
@@ -125,17 +118,16 @@ class HtmlElement
 
     /**
      * @param $attribute
-     * @param $value
      *
      * @return string
      */
-    protected function renderAttribute($attribute, $value): string
+    protected function renderAttribute($attribute): string
     {
         if ( is_numeric($attribute) ) {
-            return " $value";
+            return ' ' . $this->attributes[$attribute];
         }
 
-        return ' ' . $attribute . '="' . htmlentities($value, ENT_QUOTES, 'UTF-8') . '"';
+        return ' ' . $attribute . '="' . htmlentities($this->attributes[$attribute], ENT_QUOTES, 'UTF-8') . '"';
     }
 
 }
