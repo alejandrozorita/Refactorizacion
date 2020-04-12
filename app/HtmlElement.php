@@ -31,7 +31,7 @@ class HtmlElement
     {
         $this->name = $name;
         $this->content = $content;
-        $this->attributes = $attributes;
+        $this->attributes = new HtmlAttributes($attributes);
     }
 
 
@@ -45,15 +45,6 @@ class HtmlElement
         }
 
         return $this->open() . $this->content() . $this->close();
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function isVoid(): bool
-    {
-        return in_array($this->name, [ 'br', 'hr', 'img', 'input', 'meta' ]);
     }
 
 
@@ -89,45 +80,16 @@ class HtmlElement
      */
     public function attributes(): string
     {
-
-        /*
-         *
-         if ( empty($this->attributes) ) {
-            return '';
-        }
-
-         */
-        if ( ! $this->hasAttributes() ) {
-            return '';
-        }
-
-        return array_reduce(array_keys($this->attributes), function ($result, $item) {
-            return $result . $this->renderAttribute($item);
-        }, '');
+        return $this->attributes->render();
     }
 
 
     /**
      * @return bool
      */
-    public function hasAttributes(): bool
+    public function isVoid(): bool
     {
-        return ! empty($this->attributes);
-    }
-
-
-    /**
-     * @param $attribute
-     *
-     * @return string
-     */
-    protected function renderAttribute($attribute): string
-    {
-        if ( is_numeric($attribute) ) {
-            return ' ' . $this->attributes[$attribute];
-        }
-
-        return ' ' . $attribute . '="' . htmlentities($this->attributes[$attribute], ENT_QUOTES, 'UTF-8') . '"';
+        return in_array($this->name, [ 'br', 'hr', 'img', 'input', 'meta' ]);
     }
 
 }
